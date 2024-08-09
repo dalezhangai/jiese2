@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戒色小商城</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-blue-500 p-4 text-white">
+        <h1 class="text-center">戒色小商城</h1>
+    </header>
+    <main class="p-4">
+        <div id="products" class="grid grid-cols-3 gap-4"></div>
+    </main>
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('./products.json');
+            const products = await response.json();
+            const productContainer = document.getElementById('products');
+            products.forEach(product => {
+                const productElement = `
+                    <div class="border p-4">
+                        <h2>${product.name}</h2>
+                        <p>${product.description}</p>
+                        <p>价格: ¥${product.price}</p>
+                        <button onclick="addToCart(${product.id})" class="bg-green-500 p-2 text-white">加入购物车</button>
+                    </div>
+                `;
+                productContainer.innerHTML += productElement;
+            });
+        }
+
+        function addToCart(productId) {
+            // 实现购物车逻辑，例如将商品ID保存在localStorage中
+        }
+
+        fetchProducts();
+    </script>
+</body>
+</html>

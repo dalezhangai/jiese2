@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戒色社群</title>
+</head>
+<body>
+    <header class="bg-blue-500 p-4 text-white">
+        <h1 class="text-center">戒色社群</h1>
+    </header>
+    <main class="p-4">
+        <div id="messages" class="space-y-2"></div>
+        <input type="text" id="messageInput" class="border p-2" placeholder="输入消息...">
+        <button onclick="sendMessage()" class="bg-green-500 p-2 text-white">发送</button>
+    </main>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+
+        socket.on('message', (message) => {
+            const messageContainer = document.getElementById('messages');
+            messageContainer.innerHTML += `<p>${message}</p>`;
+        });
+
+        function sendMessage() {
+            const message = document.getElementById('messageInput').value;
+            socket.emit('sendMessage', message);
+            document.getElementById('messageInput').value = '';
+        }
+    </script>
+</body>
+</html>

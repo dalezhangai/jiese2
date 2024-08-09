@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>戒色网站</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+    <header class="bg-blue-500 p-4 text-white">
+        <h1 class="text-center">戒色分享</h1>
+    </header>
+    <main class="p-4">
+        <!-- 社群和商城按钮 -->
+        <div class="mb-4">
+            <button onclick="window.location.href='./chat.html'" class="bg-green-500 p-2 text-white mr-2">进入社群</button>
+            <button onclick="window.location.href='./shop.html'" class="bg-green-500 p-2 text-white">进入商城</button>
+        </div>
+        <!-- 文章列表 -->
+        <div id="articles" class="space-y-4"></div>
+    </main>
+    <!-- 加载 remark 和 remark-html 库 -->
+    <script src="https://cdn.jsdelivr.net/npm/remark@13/remark.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/remark-html@13/remark-html.min.js"></script>
+    <script>
+        async function fetchArticles() {
+            const articles = ['article1.md', 'article2.md']; // 文章列表
+            const articleContainer = document.getElementById('articles');
+            for (const article of articles) {
+                try {
+                    const response = await fetch(`./articles/${article}`);
+                    if (!response.ok) {
+                        throw new Error(`Failed to load ${article}: ${response.statusText}`);
+                    }
+                    const text = await response.text();
+                    // 替代方法，直接插入 Markdown 文本，测试 remark 是否正常工作
+                    const markdownContent = document.createElement('pre');
+                    markdownContent.textContent = text;
+                    articleContainer.appendChild(markdownContent);
+
+                    const processor = remark().use(remarkHtml);
+                    const html = processor.processSync(text).toString();
+                    const articleElement = document.createElement('div');
+                    articleElement.innerHTML = `<div class="p-4 border rounded">${html}</div>`;
+                    articleContainer.appendChild(articleElement);
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+        fetchArticles();
+    </script>
+</body>
+</html>
+
